@@ -9,22 +9,24 @@
 
 import re
 import urllib.request
+import time
 import json
 import URLdecoder
 import copy
+
 # import dictTraversal
 # import callIDMan
 
 
 # 正则
+urlFormat = re.compile(r'^https://www.youtube.com/watch\?v=.*|www.youtube.com/watch\?v=.*|youtube.com/watch\?v=.*')
 mediaTitle = re.compile(r'<meta name="title" content="(.*?)">', re.S)
 ytplayerCfg = re.compile(r'<script >var ytplayer.*?</script>', re.S)
 streamingData = re.compile(r'"streamingData":{', re.S)
 streamingdata1 = re.compile("'streamingData':{(.*)},'playbackTracking'", re.S)
 streamingdata0 = re.compile("'streamingData':{(.*)},'playerAds'", re.S)
-sigCipher  = re.compile(r's=(.*?)&sp')
-cipherUrl  = re.compile(r'&url=(.*)')
-
+sigCipher = re.compile(r's=(.*?)&sp')
+cipherUrl = re.compile(r'&url=(.*)')
 
 # Unicode字符集
 replace_dict = {
@@ -44,12 +46,28 @@ headers = {
     "accept-language": "en,zh-CN;q=0.9,zh;q=0.8,ja;q=0.7,ar;q=0.6"
 }
 # 路径
-cfgPath = './config/'
+cfgPath = './log/'
 downPath = './media/'
 
 
+# url格式检车
+def checkURL(url):
+    if re.findall(urlFormat, url):
+        return True
+    elif url == '':
+        print('url is empty, input correct url')
+        main()
+    else:
+        print('incorrect format url, input correct url')
+        main()
+
+
 # 初始化目录
-def cfgDirInit(path):
+def cfgDirInit(path: str) -> bool:
+    """
+    :param path:
+    :return:
+    """
     import os
     isExists = os.path.exists(path)
     if not isExists:
@@ -62,27 +80,43 @@ def cfgDirInit(path):
 
 
 # 过程文件保留
-def write(file, filename):
+def write(file: str, filename: str) -> bool:
     """
-    :param file:str
-    :param filename:str
+    :param file:文件内容
+    :param filename:文件名
     :return:None
     """
     cfgDirInit(cfgPath)
+
+    logtime = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
+
+    filename = logtime + '_' + filename
     f = open(cfgPath + filename, "w", encoding='utf-8')
     f.write(file)
     f.close()
 
+    return True
 
-# 原页面
+
+# 请求原页面，timeout=30(s)
 def askURL(url):
+    global html
     filename = 'oringin_video_page.html'
 
     res = urllib.request.Request(url=url, headers=headers)
-    req = urllib.request.urlopen(res)
-    html = req.read().decode('utf-8')
+    reqtime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    try:
+        req = urllib.request.urlopen(res, timeout=10)
+        html = req.read().decode('utf-8')
+        print('\n请求成功，请求时间是:{}\n'.format(reqtime))
 
-    write(html, filename)
+    except Exception as e:
+        print('\n请求失败，请求时间是:{}'.format(reqtime))
+        print('失败原因:{}请检查网络\n'.format(e))
+        main()
+
+    if html:
+        write(html, filename)
 
     return html
 
@@ -130,7 +164,7 @@ def process2Json(js_file):
 # 全部格式音视频属性
 def show2User(streamingList):
     print()
-    show2user = copy.deepcopy(streamingList) # 深拷贝，有别于浅拷贝
+    show2user = copy.deepcopy(streamingList)  # 深拷贝，有别于浅拷贝
 
     for item in show2user:
         try:
@@ -139,12 +173,12 @@ def show2User(streamingList):
             del item['url']
 
     for i in range(len(show2user)):
-        print(str(i), str(show2user[i]), '\n') # 展现给用户的部分
+        print(str(i), str(show2user[i]), '\n')  # 展现给用户的部分
 
 
 # 下载队列
 def askUser(length):
-    down_queue = re.split(' ', input('which to download:(0-%d，seperate with one space)' % (length-1)))
+    down_queue = re.split(' ', input('which to download:(0-%d，seperate with one space)' % (length - 1)))
     return down_queue
 
 
@@ -174,7 +208,7 @@ def getInfo(json_file):
 
 # idm调用时输入的链接除expire之外的参数都无法输入
 def allocateURL(down_link_list, down_queue):
-    cfgDirInit(downPath)
+    # cfgDirInit(downPath)
     for i in range(len(down_link_list)):
         print(down_queue[i] + '\n' + down_link_list[i])
         # callIDMan.call(link, downPath, title)
@@ -182,6 +216,7 @@ def allocateURL(down_link_list, down_queue):
 
 def main():
     url = input("input video address:")
+    checkURL(url)
     html = askURL(url)
     pre_html, title = prettify(html)
     js_file = process2Js(pre_html)

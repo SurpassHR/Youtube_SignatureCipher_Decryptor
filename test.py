@@ -253,13 +253,23 @@ import json
 
 # ----------------------调用idm----------------------
 
-import os
+# import os
+#
+# path = 'C:\\Program Files (x86)\\Internet Download Manager\\'
+# IDM = 'idman'
+# os.chdir(path)
+# DownPath = 'C:\\Users\\10941\\Desktop\\'
+# DownUrl = 'https://w.wallhaven.cc/full/wy/wallhaven-wyz5ex.jpg'
+# FileName = '123.jpg'
+# command = ' '.join([IDM, '/d', DownUrl, '/p', DownPath, '/f', FileName, '/q', '/s'])
+# os.system(command)
 
-path = 'C:\\Program Files (x86)\\Internet Download Manager\\'
-IDM = 'idman'
-os.chdir(path)
-DownPath = 'C:\\Users\\10941\\Desktop\\'
-DownUrl = 'https://w.wallhaven.cc/full/wy/wallhaven-wyz5ex.jpg'
-FileName = '123.jpg'
-command = ' '.join([IDM, '/d', DownUrl, '/p', DownPath, '/f', FileName, '/q', '/s'])
-os.system(command)
+
+# ---------------------错误抛出------------------------
+
+try:
+    html = '123'
+except:
+    html = '234'
+
+print(html)
