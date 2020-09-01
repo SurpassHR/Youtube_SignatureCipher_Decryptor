@@ -1,0 +1,166 @@
+# -*- coding: utf-8 -*-
+# @Time : 2020/8/29 9:26
+# @Author : KevinHoo
+# @Site : 
+# @File : main.py.old
+# @Software: PyCharm 
+# @Email : hu.rui0530@gmail.com
+
+import re
+import urllib.request
+import json
+import copy
+import sys
+import URLdecoder
+
+dataBase   = "streamingData.json" # 流媒体详细信息
+video_part = re.compile(r'<script >(.*?)</script>', re.S)
+info_part  = re.compile(r'ytplayer.config = {(.*?)};', re.S)
+sigCipher  = re.compile(r's=(.*?)&sp')
+cipherUrl  = re.compile(r'&url=(.*)')
+replace_dict  = {
+    '\\u0026': '&',
+    '\\': '',
+}
+replace_dict2 = {
+    '"{': '{',
+    '}}}}"': '}}}}'
+}
+replace_dict3 = {
+    ' ': '',
+    '\n': '',
+    '"': '\''
+}
+headers = {
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.76 Safari/537.36",
+    "accept-language": "en,zh-CN;q=0.9,zh;q=0.8,ja;q=0.7,ar;q=0.6"
+}
+
+
+def askURL(url):
+    res = urllib.request.Request(url=url, headers=headers)
+    req = urllib.request.urlopen(res)
+    html = req.read().decode('utf-8')
+    print(html)
+    for item in replace_dict:
+        html = html.replace(item, replace_dict[item])
+
+    script_list = re.findall(video_part, html)
+    for item in script_list:
+        if re.findall('googlevideo', item):
+            return item
+
+
+def process2json(js_uncorrected):
+    # print(js_uncorrected)
+    for item in replace_dict2:
+        js_uncorrected = js_uncorrected.replace(item, replace_dict2[item])
+
+    warnning = re.compile('codecs=".*?"', re.S)
+    wrongs = re.findall(warnning, js_uncorrected)
+    wrong: object
+    corrects = []
+    for wrong in wrongs:
+        for i in replace_dict3:
+            wrong = wrong.replace(i, replace_dict3[i])
+        corrects.append(wrong)
+
+    for i in range(len(wrongs)):
+        js_uncorrected = js_uncorrected.replace(wrongs[i], corrects[i])
+    # f = open("TEST.json", "w", encoding='utf-8')
+    # f.write(js_uncorrected)
+    # f.close()
+
+    streamingdata1 = re.compile('"streamingData":{(.*)},"playbackTracking"', re.S)
+    streamingdata0 = re.compile('"streamingData":{(.*)},"playerAds"', re.S)
+
+    if not re.findall(streamingdata0, js_uncorrected):
+        data = '{' + '"streamingData": {' + re.findall(streamingdata1, js_uncorrected)[0] + '}' + '}'
+    else:
+        data = '{' + '"streamingData": {' + re.findall(streamingdata0, js_uncorrected)[0] + '}' + '}'
+
+    f = open(dataBase, "w", encoding='utf-8')
+    f.write(data)
+    f.close()
+
+    # 到此为止，包含不同码率的{'合并视频', '纯视频', '纯音频'}的json文件处理告一段落
+    return data
+
+
+def json_content_process(jsonfile):
+    s = json.loads(jsonfile)
+    formats = s['streamingData']['adaptiveFormats']
+    show2user = copy.deepcopy(formats)
+
+    for item in show2user:
+        try:
+            try:
+                del item['signatureCipher']
+            except KeyError:
+                pass
+            del item['url']
+        except KeyError:
+            pass
+
+    for i in range(len(show2user)):
+        print(str(i), str(show2user[i]), '\n') # 展现给用户的部分
+
+    return formats
+
+
+def downVid(ser_num):
+    canDownload = True
+    down_queue = re.split(' ', ser_num)
+    down_link_list = []
+    with open(dataBase, "r", encoding='utf-8') as f:
+        s = f.read()
+    string = json.loads(s)['streamingData']['adaptiveFormats']
+    for num in down_queue:
+        singleVid = string[int(num)]
+        if 'signatureCipher' in singleVid:
+            noneUni = URLdecoder.seperatorOff(singleVid['signatureCipher'])
+            sig = URLdecoder.decode(re.findall(sigCipher, noneUni)[0])
+            url = re.findall(cipherUrl, noneUni)[0]
+            down_link_list.append(url + '&sig=' + sig)
+            canDownload = False
+        elif 'url' in singleVid:
+            down_link_list.append(singleVid['url'])
+    if canDownload:
+        print('点击链接转到下载页，若没有弹出下载框右键保存')
+        for link in down_link_list:
+            print(link)
+    else:
+        print('cipher解密后的链接，y2b会经常改变算法，有时会失效，点击链接转到下载页，若没有弹出下载框右键保存')
+        for link in down_link_list:
+            print(link)
+
+
+    # res = urllib.request.Request(url=down_link_list[0], headers=headers)
+    # req = urllib.request.urlopen(res)
+    # html = req.read()
+    # with open("123.mp4", "w") as f:
+    #     f.write(html)
+
+
+def _progress(block_num, block_size, total_size):
+    """回调函数
+       :param block_num: 已经下载的数据块
+       :param block_size: 数据块的大小
+       :param total_size: 远程文件的大小
+    """
+    sys.stdout.write('\r>> Downloading %s %.1f%%' % ("123.mp4" ,float(block_num * block_size) / float(total_size) * 100.0))
+    sys.stdout.flush()
+
+
+def main():
+    url = input("input video address:")
+    # url = 'https://www.youtube.com/watch?v=LXb3EKWsInQ&t=3s'
+    js_part = askURL(url)
+    streamingData = process2json(js_part)
+    video_list = json_content_process(streamingData)
+    down_serial = input("which to download:(0-%d，多个用空格分隔)"%(len(video_list)-1))
+    downVid(down_serial)
+
+
+if __name__ == '__main__':
+    main()
