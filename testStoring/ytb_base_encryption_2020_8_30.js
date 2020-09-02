@@ -22,3 +22,7 @@ Hv = function (a) {
 
 s = 'ccOqAOq0QJ8wRQIgBuNfgiPAG1So8sHkvynM2zI_Al-_RcmY0dUoFSZh3mICIQCpqaaY08hzym7HTEEy_Kd4eBUoIZzWrlAJvWpkl-NatA%3D%3D'
 a = Hv(s)
+
+var g = {
+    i: function ()
+}

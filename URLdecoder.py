@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-# @Time : 2020/8/30 18:37
+# @Time : 2020/9/2 13:35
 # @Author : KevinHoo
 # @Site : 
-# @File : URLdecoder.py
+# @File : URLdecoder.py.py
 # @Software: PyCharm 
 # @Email : hu.rui0530@gmail.com
 
 
-decode_list = {
+decode_dict = {
     ' ': '%20',
     '"': '%22',
     '#': '%23',
@@ -30,11 +30,11 @@ decode_list = {
 }
 
 
-
+# 百分号解码
 def seperatorOff(a):
     print('converting url...')
-    for key in decode_list:
-        a = a.replace(decode_list[key], key)
+    for key in decode_dict:
+        a = a.replace(decode_dict[key], key)
     return a
 
 
@@ -46,34 +46,39 @@ def splice(list, index, num):
 
     return list
 
-class Gv:
-    def HF(a:list):
-        a.reverse()
 
-    def A2(a:list, b):
-        splice(a, 0, b)
-
-    def ch(a:list, b):
+class Fv:
+    def i7(a:list, b):
         c = a[0]
         a[0] = a[b % len(a)]
         a[b % len(a)] = c
 
-def Hv(s):
-    print('decrypting signature...')
+    def D3(a:list, b):
+        splice(a, 0, b)
+
+    def Hm(a:list, num:int):
+        a.reverse()
+
+def Gv(s):
     a = []
     for item in s:
         a.append(item)
-    Gv.A2(a, 1)
-    Gv.ch(a, 39)
-    Gv.A2(a, 3)
+    Fv.Hm(a, 30)
+    Fv.i7(a, 69)
+    Fv.Hm(a, 3)
+    Fv.i7(a, 20)
+    Fv.Hm(a, 52)
+    Fv.i7(a, 32)
+    Fv.D3(a, 3)
     return ''.join(a)
 
 
 def decode(s):
-    return Hv(s)
+    return Gv(s)
+
 
 if __name__ == '__main__':
-    print(decode(
-        'OqAOq0QJ8wRQIhAJwynfDBELz-k39lHkkCQv=bAcSVgvhSjbGSYP2xpYqDAiBQ8OVaJwGXVulEPGq-v-PKxWqG6AxEANyhaalPQ5SPIg=='))
-#        q0QJ8wRQIhAJwynfDBELz-k39lHkkCQv=bAcqVgvhSjbGSYP2xpYqDAiBQ8OVaJwGXVulEPGq-v-PKxWqG6AxEANyhaalPQ5SPIg==
-
+    sigcipher = ""
+    sigcipher = seperatorOff(sigcipher)
+    s = ""
+    s = decode(s)

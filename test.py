@@ -267,14 +267,18 @@ import json
 
 # --------------unicode------------------
 
-def to_chinese(unicode_str):
-    x = json.loads('{"chinese":"%s"}' % unicode_str)
-    return x['chinese']
+# def to_chinese(unicode_str):
+#     x = json.loads('{"chinese":"%s"}' % unicode_str)
+#     return x['chinese']
+#
+# # f = open("./log/store.js", "r", encoding='utf-8')
+# # string = f.read()
+#
+# string = '"\/s\/player\/86f77974\/player_ias.vflset\/zh_CN\/base.js", "css"'
 
-# f = open("./log/store.js", "r", encoding='utf-8')
-# string = f.read()
 
-string = '"\/s\/player\/86f77974\/player_ias.vflset\/zh_CN\/base.js", "css"'
+# print(to_chinese(string))
 
-
-print(to_chinese(string))
+a = "asdasdas"
+a = re.split('', a)
+print(a)

@@ -1,0 +1,81 @@
+# -*- coding: utf-8 -*-
+# @Time : 2020/8/30 18:37
+# @Author : KevinHoo
+# @Site : 
+# @File : URLdecoder.py2020-08-31失效
+# @Software: PyCharm 
+# @Email : hu.rui0530@gmail.com
+
+
+decode_dict = {
+    ' ': '%20',
+    '"': '%22',
+    '#': '%23',
+    '%': '%25',
+    '&': '%26',
+    '(': '%28',
+    ')': '%29',
+    '+': '%2B',
+    ',': '%2C',
+    '/': '%2F',
+    ':': '%3A',
+    ';': '%3B',
+    '<': '%3C',
+    '=': '%3D',
+    '>': '%3E',
+    '?': '%3F',
+    '@': '%40',
+    '\\': '%5C',
+    '|': '%7C',
+}
+
+
+
+def seperatorOff(a):
+    print('converting url...')
+    for key in decode_dict:
+        a = a.replace(decode_dict[key], key)
+    return a
+
+
+def splice(list, index, num):
+    for i in range(num):
+        list[index + i] = ''
+    while '' in list:
+        list.remove('')
+
+    return list
+
+class Gv:
+    def HF(a:list):
+        a.reverse()
+
+    def A2(a:list, b):
+        splice(a, 0, b)
+
+    def ch(a:list, b):
+        c = a[0]
+        a[0] = a[b % len(a)]
+        a[b % len(a)] = c
+
+def Hv(s):
+    print('decrypting signature...')
+    a = []
+    for item in s:
+        a.append(item)
+    Gv.A2(a, 1)
+    Gv.ch(a, 39)
+    Gv.A2(a, 3)
+    return ''.join(a)
+
+
+def decode(s):
+    return Hv(s)
+
+if __name__ == '__main__':
+    u1 = 's=I4ymvwE4irt51U0X564z%3Dz6BN4E95rxO0lUuBQbomDD0AEiAtUsuy0VNIMcA4vy1W2QxOH21O7AdZy4_oXLB9DOA1INAhIgRw8JQ0qOAqOv&sp=sig&url=https://r2---sn-jxnj5-cjoe.googlevideo.com/videoplayback%3Fexpire%3D1599033859%26ei%3Do_1OX-zcFoLZmwe8qpLICQ%26ip%3D51.105.32.93%26id%3Do-AKTo6iIitIRHsNnfwiFRvE3I4xpn-02CMgLmHXF7Enf3%26itag%3D18%26source%3Dyoutube%26requiressl%3Dyes%26mh%3DLh%26mm%3D31%252C29%26mn%3Dsn-jxnj5-cjoe%252Csn-5hnekn7l%26ms%3Dau%252Crdu%26mv%3Du%26mvi%3D2%26pcm2cms%3Dyes%26pl%3D18%26gcr%3Dgb%26vprv%3D1%26mime%3Dvideo%252Fmp4%26gir%3Dyes%26clen%3D17793698%26ratebypass%3Dyes%26dur%3D295.404%26lmt%3D1583110775970339%26mt%3D1599012102%26fvip%3D2%26c%3DWEB%26txp%3D5531432%26sparams%3Dexpire%252Cei%252Cip%252Cid%252Citag%252Csource%252Crequiressl%252Cgcr%252Cvprv%252Cmime%252Cgir%252Cclen%252Cratebypass%252Cdur%252Clmt%26lsparams%3Dmh%252Cmm%252Cmn%252Cms%252Cmv%252Cmvi%252Cpcm2cms%252Cpl%26lsig%3DAG3C_xAwRQIgU9nHTtaBkxjLfcN7HIQERHscheSdJ-HWmB0gPQBb31ECIQCMMKOwzTAkYdrFlgVXf9AuNIQytAiJ-2KXfDZI6y3x_Q%253D%253D'
+    u2 = 'https://r1---sn-jxnj5-cjoe.googlevideo.com/videoplayback?expire=1599034068&ei=dP5OX863DoKQ0wW77IGQAw&ip=51.105.32.93&id=o-AHc49RUcTvQhxO7XUmoRW1naWPb7F7GgvgNS8rtayxs7&itag=401&aitags=133%2C134%2C135%2C136%2C137%2C160%2C242%2C243%2C244%2C247%2C248%2C271%2C278%2C313%2C394%2C395%2C396%2C397%2C398%2C399%2C400%2C401&source=youtube&requiressl=yes&mh=TT&mm=31%2C29&mn=sn-jxnj5-cjoe%2Csn-5hne6nsd&ms=au%2Crdu&mv=u&mvi=1&pl=18&vprv=1&mime=video%2Fmp4&gir=yes&clen=985717890&dur=739.199&lmt=1598532121726647&mt=1599012102&fvip=1&keepalive=yes&beids=9466588&c=WEB&txp=5531432&sparams=expire%2Cei%2Cip%2Cid%2Caitags%2Csource%2Crequiressl%2Cvprv%2Cmime%2Cgir%2Cclen%2Cdur%2Clmt&sig=AOq0QJ8wRQIgHC60SXUAbYmnP0x7JyIJp2hbSgrxJ6NN0SF6BUMnNAoCIQDRMgb3oS54EPaXVspig9ecFUHG1_abCDKGAWIZmmAyRA%3D%3D&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl&lsig=AG3C_xAwRQIhANpR1w2RdJbLuU1Fd-WzgSYYnDaJ5kkP-Yb6A4IBAMTrAiAGakLUvh7_2ZiVht-00vwe6lAQXDKzO_M_-jn6ND5K2w%3D%3D'
+    u1 = seperatorOff(u1)
+    u2 = seperatorOff(u2)
+    print()
+
