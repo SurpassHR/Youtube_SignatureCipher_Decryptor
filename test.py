@@ -265,11 +265,16 @@ import json
 # os.system(command)
 
 
-# ---------------------错误抛出------------------------
+# --------------unicode------------------
 
-try:
-    html = '123'
-except:
-    html = '234'
+def to_chinese(unicode_str):
+    x = json.loads('{"chinese":"%s"}' % unicode_str)
+    return x['chinese']
 
-print(html)
+# f = open("./log/store.js", "r", encoding='utf-8')
+# string = f.read()
+
+string = '"\/s\/player\/86f77974\/player_ias.vflset\/zh_CN\/base.js", "css"'
+
+
+print(to_chinese(string))

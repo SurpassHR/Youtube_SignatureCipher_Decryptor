@@ -48,9 +48,11 @@ headers = {
 # 路径
 cfgPath = './log/'
 downPath = './media/'
+# 日志开关
+logOn = True
 
 
-# url格式检车
+# url格式检测
 def checkURL(url):
     if re.findall(urlFormat, url):
         return True
@@ -101,7 +103,6 @@ def write(file: str, filename: str) -> bool:
 # 请求原页面，timeout=30(s)
 def askURL(url):
     global html
-    filename = 'oringin_video_page.html'
 
     res = urllib.request.Request(url=url, headers=headers)
     reqtime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -115,7 +116,8 @@ def askURL(url):
         print('失败原因:{}请检查网络\n'.format(e))
         main()
 
-    if html:
+    if html & logOn:
+        filename = 'oringin_video_page.html'
         write(html, filename)
 
     return html
@@ -123,40 +125,41 @@ def askURL(url):
 
 # 替换掉unicode字符的页面
 def prettify(html):
-    filename = 'pre_video_page.html'
-
     for item in replace_dict:
         html = html.replace(item, replace_dict[item])
 
     title = re.findall(mediaTitle, html)[0]
 
-    write(html, filename)
+    if logOn:
+        filename = 'pre_video_page.html'
+        write(html, filename)
 
     return html, title
 
 
 # 截取含有ytplayer播放器信息的js脚本
 def process2Js(pre_html):
-    filename = 'video_info_ytplayer_js.html'
 
     js_file = re.findall(ytplayerCfg, pre_html)[0]
 
-    write(js_file, filename)
+    if logOn:
+        filename = 'video_info_ytplayer_js.html'
+        write(js_file, filename)
 
     return js_file
 
 
 # 截取ytplayer中含有的流媒体信息
 def process2Json(js_file):
-    filename = 'video_page_json.json'
-
     if not re.findall(streamingdata0, js_file):
         json_file = '{' + '"streamingData": {' + re.findall(streamingdata1, js_file)[0] + '}' + '}'
     else:
         json_file = '{' + '"streamingData": {' + re.findall(streamingdata0, js_file)[0] + '}' + '}'
     json_file = json_file.replace("'", '"')
 
-    write(json_file, filename)
+    if logOn:
+        filename = 'video_page_json.json'
+        write(json_file, filename)
 
     return json_file
 
