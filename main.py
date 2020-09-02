@@ -49,7 +49,7 @@ headers = {
 cfgPath = './log/'
 downPath = './media/'
 # 日志开关
-logOn = False
+logOn = True
 
 
 # url格式检测
