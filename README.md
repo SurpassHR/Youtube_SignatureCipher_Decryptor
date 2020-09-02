@@ -281,8 +281,6 @@ def process2Json(js_file):
 
 这很影响对链接内容的分析，所以再次字典replace，转成我们方便分析的形式
 
-![14](.\imgNote\14.png)
-
 ```python
 # 百分号加密字符集
 decode_dict = {
