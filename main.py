@@ -49,7 +49,7 @@ headers = {
 cfgPath = './log/'
 downPath = './media/'
 # 日志开关
-logOn = True
+logOn = False
 
 
 # url格式检测
@@ -116,7 +116,7 @@ def askURL(url):
         print('失败原因:{}请检查网络\n'.format(e))
         main()
 
-    if html & logOn:
+    if logOn:
         filename = 'oringin_video_page.html'
         write(html, filename)
 
