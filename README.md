@@ -1,7 +1,5 @@
 # Youtube SignatureCipher Decryptor 项目过程记录与总结
-
 [Github-SurpassHR/Youtube_SignatureCipher_Decryptor](https://github.com/SurpassHR/Youtube_SignatureCipher_Decryptor)
-
 - [Youtube SignatureCipher Decryptor 项目过程记录与总结](#youtube-signaturecipher-decryptor-项目过程记录与总结)
   - [-1-写在前面](#-1-写在前面)
   - [0-Re0:梦开始的地方](#0-re0梦开始的地方)
@@ -40,16 +38,9 @@ Youtube上的视频抛开内容质量不谈画质确实可以说是顶级的，�
 
 ![wSjwS1.png](https://s1.ax1x.com/2020/09/02/wSjwS1.png)
 
-<<<<<<< HEAD
-![wSjwS1.png](https://s1.ax1x.com/2020/09/02/wSjwS1.png)
-
-这`blob:https`看起来很像一种协议，经过一番百度发现：**`blob:https`并不是一种协议，而是html5中blob对象在赋给video标签后生成的一串标记，blob对象对象包含的数据，浏览器内部会解析。**果然，在网页原文
-
-=======
 这`blob:https`看起来很像一种协议，经过一番百度发现：`blob:https`并不是一种协议，而是html5中blob对象在赋给video标签后生成的一串标记，blob对象对象包含的数据，浏览器内部会解析。**果然，在网页原文
 
->>>>>>> 47dc8f02eba05f014f2e44688991455d56dfbf12
->>>>>>> ![wSjUY9.png](https://s1.ax1x.com/2020/09/02/wSjUY9.png)
+![wSjUY9.png](https://s1.ax1x.com/2020/09/02/wSjUY9.png)
 
 没有再能找到`blob`，说明`blob`通过调用某个js的某种方法将其变成了另一个链接，所以接下来有两种选择，一是冲着这个js方法使劲，二是凭感觉来找，根据我的经验在一个动态页面找一个隐藏在js中的视频链接不会太难，毕竟也就那几十条，而且一些通用的关键词`playinfo`、`player-api`等等都可以快速地检索到目标所在的标签，而与此同时使用base加密的js格式化后大概有5、6万行，但其实还有三，那就是直接抓包，但那样不就等于开挂了吗？我在写这篇总结时已经把成品做出来了，所以这一次我打算正面硬刚加密的js
 
@@ -308,7 +299,6 @@ def process2Json(js_file):
 ![wSj2Yd.png](https://s1.ax1x.com/2020/09/02/wSj2Yd.png)
 
 这很影响对链接内容的分析，所以再次字典replace，转成我们方便分析的形式
-
 ```python
 # 百分号加密字符集
 decode_dict = {
@@ -341,14 +331,7 @@ for value in decode_dict:
 
 大概就是这样几个地方的不同，此时访问正义联盟的url
 
-<<<<<<< HEAD
-
-![wSjRfA.png](https://s1.ax1x.com/2020/09/02/wSjRfA.png)
-=======
-
 ![wpNPV1.png](https://s1.ax1x.com/2020/09/02/wpNPV1.png)
-
->>>>>>> 47dc8f02eba05f014f2e44688991455d56dfbf12
 
 被阻止了，无权访问，但最起码服务器响应了，再根据前面已经写了这段链接是`"SignatureCipher"`的值，明显我们少的是那段sig也就是签名
 
